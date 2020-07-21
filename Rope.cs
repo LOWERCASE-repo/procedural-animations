@@ -24,21 +24,23 @@ class Rope : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		float error = 0f;
 		foreach (RopeSeg seg in segs) seg.VerletUpdate();
-		for (int j = 0; j < 5; j++) {
+		float count = 0;
+		float error;
+		do {
+			count++;
+			error = 0;
 			for (int i = 1; i < segs.Count; i++) {
 				Vector2 dir = segs[i].Pos - segs[i - 1].Pos;
 				float mag = dir.magnitude;
 				if (mag > radius) {
-					Debug.Log(mag);
 					error += mag - radius;
 					dir = dir.normalized * (mag - radius);
 					segs[i].Pos -= dir;
 				}
 			}
-		}
-		// Debug.Log(error);
+		} while (error > 1f);
+		Debug.Log(count);
 	}
 	
 }
