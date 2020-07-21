@@ -7,18 +7,19 @@ class Rope : MonoBehaviour {
 	float length, radius;
 	int segCount;
 	[SerializeField]
-	RopeSeg segFab, firstSeg, lastSeg;
+	RopeSeg segFab, probe;
+	[SerializeField]
+	Rigidbody2D anchor;
 	[SerializeField]
 	LineRenderer rend;
-	List<RopeSeg> segs;
+	List<RopeSeg> segs = new List<RopeSeg>();
 	// anim curve for bezier gen too
 	
 	void Start() {
 		int segCount = (int)(length / radius * 0.5f) - 2;
-		segs = new List<RopeSeg>();
-		segs.Add(firstSeg);
+		
 		for (int i = 0; i < segCount; i++) {
-			RopeSeg seg = Instantiate(segFab, Vector2.zero, transform.rotation);
+			RopeSeg seg = Instantiate(segFab, transform);
 			seg.Radius = radius;
 			segs.Add(seg);
 		}
