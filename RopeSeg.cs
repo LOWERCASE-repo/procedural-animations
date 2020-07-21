@@ -1,3 +1,5 @@
+#pragma warning disable 0649
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -6,7 +8,7 @@ class RopeSeg : MonoBehaviour {
 	[SerializeField]
 	internal Rigidbody2D body;
 	[SerializeField]
-	CircleCollider2D collider;
+	new CircleCollider2D collider;
 	[SerializeField]
 	DistanceJoint2D joint;
 	
@@ -17,7 +19,7 @@ class RopeSeg : MonoBehaviour {
 	internal float Radius {
 		set {
 			collider.radius = value;
-			joint.distance = value * 2f; // set sep for curve
+			joint.distance = value * 2f;
 		}
 	}
 	internal Rigidbody2D Link { set => joint.connectedBody = value; }
