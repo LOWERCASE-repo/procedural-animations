@@ -7,7 +7,7 @@ class Tendril : MonoBehaviour {
 	
 	[SerializeField]
 	Camera cam;
-	internal Vector2 target;
+	internal Vector2 target = Vector2.zero;
 	
 	[SerializeField]
 	float speed, thrust;
@@ -29,13 +29,13 @@ class Tendril : MonoBehaviour {
 		Debug.Log(totalSize);
 		foreach (Probe probe in probeLinks) {
 			probe.body.mass = 4f * probe.Size / totalSize;
-			probe.body.drag = 2f * thrust * probe.body.mass;
+			probe.body.drag = 4f * thrust * probe.body.mass;
 		}
 		tip = probeLinks.Last.Value.body;
 	}
 	
 	void FixedUpdate() {
-		target = cam.ScreenToWorldPoint(Input.mousePosition);
+		// target = cam.ScreenToWorldPoint(Input.mousePosition);
 		Vector2 dir = target - tip.position;
 		Vector2 force = dir.normalized * thrust * speed;
 		tip.AddForce(force);

@@ -539,7 +539,7 @@ MonoBehaviour:
   cam: {fileID: 519420031}
   speed: 20
   thrust: 20
-  length: 10
+  length: 12
   size: 1
   shape:
     serializedVersion: 2
@@ -589,6 +589,7 @@ GameObject:
   - component: {fileID: 2104303200}
   - component: {fileID: 2104303199}
   - component: {fileID: 2104303198}
+  - component: {fileID: 2104303202}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -609,8 +610,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 2104303200}
-  speed: 10
-  thrust: 10
+  speed: 5
+  thrust: 5
+  tendrilRefs:
+  - {fileID: 2006878170}
 --- !u!212 &2104303199
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -697,3 +700,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &2104303202
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104303197}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 5
