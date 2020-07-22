@@ -9,6 +9,8 @@ class RopeSeg : MonoBehaviour {
 	internal Rigidbody2D body;
 	[SerializeField]
 	DistanceJoint2D joint;
+	[SerializeField]
+	SpriteRenderer sprite;
 	
 	internal Vector2 Pos {
 		get => body.position;
@@ -22,4 +24,6 @@ class RopeSeg : MonoBehaviour {
 		}
 	}
 	internal Rigidbody2D Link { set => joint.connectedBody = value; }
+	internal Color color { set => sprite.color = value; }
+	internal int order { set => sprite.sortingOrder = value; }
 }

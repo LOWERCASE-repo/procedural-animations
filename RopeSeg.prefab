@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 2920080156147634959}
   joint: {fileID: 3159017092324513211}
+  sprite: {fileID: 2920080156147634945}
 --- !u!50 &2920080156147634959
 Rigidbody2D:
   serializedVersion: 4
