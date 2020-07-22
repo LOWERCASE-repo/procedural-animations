@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 class Rope : MonoBehaviour {
 	
-	internal Vector2 target = Vector2.zero;
-	internal bool attached = false;
+	internal Rigidbody2D target;
+	internal Rigidbody2D body { get => self.body; }
 	
 	[SerializeField]
 	float speed, thrust;
@@ -18,14 +18,12 @@ class Rope : MonoBehaviour {
 	RopeSeg segFab, self;
 	[SerializeField]
 	Rigidbody2D anchor;
-	Rigidbody2D body { get => self.body; }
 	LinkedList<RopeSeg> ropeSegs;
 	float totalSize = 0f;
 	
 	void Start() {
 		Grow();
 		int probeCount = ropeSegs.Count;
-		Debug.Log(totalSize);
 		foreach (RopeSeg probe in ropeSegs) {
 			probe.body.mass = 4f * probe.Size / totalSize;
 			probe.body.drag = 4f * thrust * probe.body.mass;
@@ -33,23 +31,14 @@ class Rope : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		Vector2 dir = target - body.position;
+		Vector2 dir = target.position - body.position;
 		Vector2 force = dir.normalized * thrust * speed;
 		body.AddForce(force);
 	}
 	
-	void OnCollisionEnter2D() {
-		// TODO switch to colliders for targets and compare colliders
-		// compare for whether to attach or not
-		if (attached == true) {
-			Debug.Log("unboop");
-			attached = false;
-		}
-		else {
-			body.bodyType = RigidbodyType2D.Static;
-			attached = true;
-			Debug.Log("boop");
-		}
+	void OnCollisionEnter2D(Collision2D collision) {
+		Rigidbody2D target = collision.collider.attachedRigidbody;
+		if (target == this.target) body.bodyType = RigidbodyType2D.Static;
 	}
 	
 	internal void Release() {

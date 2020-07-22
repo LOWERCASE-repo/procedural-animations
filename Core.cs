@@ -13,33 +13,37 @@ class Core : MonoBehaviour {
 	[SerializeField]
 	Rope[] ropeRefs;
 	HashSet<Rope> ropes;
-	HashSet<Vector2> targets = new HashSet<Vector2>();
-	Dictionary<Vector2, Rope> grabs = new Dictionary<Vector2, Rope>();
+	HashSet<Rigidbody2D> targets = new HashSet<Rigidbody2D>();
+	Dictionary<Rigidbody2D, Rope> grabs = new Dictionary<Rigidbody2D, Rope>();
 	int connections;
 	
 	void Start() {
 		body.drag = thrust;
 		ropes = new HashSet<Rope>(ropeRefs);
 		ropeRefs = null;
+		AssignGrabs();
 	}
 	
 	void FixedUpdate() {
 		Vector2 dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 		float bonusSpeed = 0f;
-		foreach (Rope rope in ropes) {
-			if (rope.attached) bonusSpeed += speedBonus;
+		foreach (Rope rope in grabs.Values) {
+			if (rope.body.bodyType == RigidbodyType2D.Static) {
+				bonusSpeed += speedBonus;
+			}
 		}
-		Vector2 force = dir.normalized * thrust * (speed + speedBonus);
+		Debug.Log(bonusSpeed);
+		Vector2 force = dir.normalized * thrust * (speed + bonusSpeed);
 		body.AddForce(force);
 	}
 	
 	void OnTriggerEnter2D(Collider2D other) {
-		targets.Add(other.transform.position);
+		targets.Add(other.attachedRigidbody);
 		AssignGrabs();
 	}
 	
 	void OnTriggerExit2D(Collider2D other) {
-		Vector2 target = other.transform.position;
+		Rigidbody2D target = other.attachedRigidbody;
 		if (targets.Contains(target)) {
 			targets.Remove(target);
 		} else {
@@ -54,14 +58,14 @@ class Core : MonoBehaviour {
 	void AssignGrabs() {
 		while (ropes.Count > 0 && targets.Count > 0) {
 			Rope rope = ropes.ElementAt(0);
-			Vector2 target = targets.ElementAt(0);
+			Rigidbody2D target = targets.ElementAt(0);
 			rope.target = target;
 			grabs.Add(target, rope);
 			ropes.Remove(rope);
 			targets.Remove(target);
 		}
 		foreach (Rope rope in ropes) {
-			rope.target = transform.position;
+			rope.target = body;
 		}
 	}
 }
