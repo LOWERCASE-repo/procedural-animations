@@ -1,15 +1,25 @@
+#pragma warning disable 0649
+
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 class Probe : MonoBehaviour {
 	
 	[SerializeField]
-	Motor motor;
+	internal Rigidbody2D body;
 	[SerializeField]
-	Camera cam;
+	DistanceJoint2D joint;
 	
-	void FixedUpdate() {
-		Vector2 dir = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-		motor.MoveDir(dir);
+	internal Vector2 Pos {
+		get => body.position;
+		set => body.position = value;
 	}
+	internal float Size {
+		get => transform.localScale.x;
+		set {
+			transform.localScale = new Vector3(value, value, 1f);
+			joint.distance = value * 0.5f;
+		}
+	}
+	internal Rigidbody2D Link { set => joint.connectedBody = value; }
 }

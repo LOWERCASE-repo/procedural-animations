@@ -9,3 +9,7 @@
 # spider
 - each foot pathfinds to targets
 - value decreases further from holds and increases closer to target in front such that it will let go midway
+
+# movement
+- switch up rb to swap between mass and drag
+- 
