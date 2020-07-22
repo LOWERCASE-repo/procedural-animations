@@ -11,27 +11,26 @@ class Core : MonoBehaviour {
 	[SerializeField]
 	float speed, thrust, speedBonus;
 	[SerializeField]
-	Tendril[] tendrilRefs;
-	HashSet<Tendril> tendrils;
+	Rope[] ropeRefs;
+	HashSet<Rope> ropes;
 	HashSet<Vector2> targets = new HashSet<Vector2>();
-	Dictionary<Vector2, Tendril> grabs = new Dictionary<Vector2, Tendril>();
+	Dictionary<Vector2, Rope> grabs = new Dictionary<Vector2, Rope>();
 	int connections;
 	
 	void Start() {
 		body.drag = thrust;
-		tendrils = new HashSet<Tendril>(tendrilRefs);
-		tendrilRefs = null;
+		ropes = new HashSet<Rope>(ropeRefs);
+		ropeRefs = null;
 	}
 	
 	void FixedUpdate() {
 		Vector2 dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 		float bonusSpeed = 0f;
-		foreach (Tendril tendril in tendrils) {
-			if (tendril.attached) bonusSpeed += speedBonus;
+		foreach (Rope rope in ropes) {
+			if (rope.attached) bonusSpeed += speedBonus;
 		}
 		Vector2 force = dir.normalized * thrust * (speed + speedBonus);
 		body.AddForce(force);
-		Debug.Log(targets.Count + " " + tendrils.Count + " " + grabs.Count);
 	}
 	
 	void OnTriggerEnter2D(Collider2D other) {
@@ -44,25 +43,25 @@ class Core : MonoBehaviour {
 		if (targets.Contains(target)) {
 			targets.Remove(target);
 		} else {
-			Tendril tendril = grabs[target];
-			tendril.Release();
-			tendrils.Add(tendril);
+			Rope rope = grabs[target];
+			rope.Release();
+			ropes.Add(rope);
 			grabs.Remove(target);
 			AssignGrabs();
 		}
 	}
 	
 	void AssignGrabs() {
-		while (tendrils.Count > 0 && targets.Count > 0) {
-			Tendril tendril = tendrils.ElementAt(0);
+		while (ropes.Count > 0 && targets.Count > 0) {
+			Rope rope = ropes.ElementAt(0);
 			Vector2 target = targets.ElementAt(0);
-			tendril.target = target;
-			grabs.Add(target, tendril);
-			tendrils.Remove(tendril);
+			rope.target = target;
+			grabs.Add(target, rope);
+			ropes.Remove(rope);
 			targets.Remove(target);
 		}
-		foreach (Tendril tendril in tendrils) {
-			tendril.target = transform.position;
+		foreach (Rope rope in ropes) {
+			rope.target = transform.position;
 		}
 	}
 }

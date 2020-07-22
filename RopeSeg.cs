@@ -3,7 +3,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-class Probe : MonoBehaviour {
+class RopeSeg : MonoBehaviour {
 	
 	[SerializeField]
 	internal Rigidbody2D body;

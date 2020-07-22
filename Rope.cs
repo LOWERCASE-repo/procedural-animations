@@ -3,10 +3,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-class Tendril : MonoBehaviour {
+class Rope : MonoBehaviour {
 	
-	[SerializeField]
-	Camera cam;
 	internal Vector2 target = Vector2.zero;
 	internal bool attached = false;
 	
@@ -17,68 +15,75 @@ class Tendril : MonoBehaviour {
 	[SerializeField]
 	AnimationCurve shape;
 	[SerializeField]
-	Probe probeFab;
+	RopeSeg segFab, self;
 	[SerializeField]
 	Rigidbody2D anchor;
-	Rigidbody2D tip;
-	LinkedList<Probe> probeLinks;
+	Rigidbody2D body { get => self.body; }
+	LinkedList<RopeSeg> ropeSegs;
 	float totalSize = 0f;
 	
 	void Start() {
 		Grow();
-		int probeCount = probeLinks.Count;
+		int probeCount = ropeSegs.Count;
 		Debug.Log(totalSize);
-		foreach (Probe probe in probeLinks) {
+		foreach (RopeSeg probe in ropeSegs) {
 			probe.body.mass = 4f * probe.Size / totalSize;
 			probe.body.drag = 4f * thrust * probe.body.mass;
 		}
-		tip = probeLinks.Last.Value.body;
 	}
 	
 	void FixedUpdate() {
-		// target = cam.ScreenToWorldPoint(Input.mousePosition);
-		Vector2 dir = target - tip.position;
+		Vector2 dir = target - body.position;
 		Vector2 force = dir.normalized * thrust * speed;
-		tip.AddForce(force);
+		body.AddForce(force);
 	}
 	
 	void OnCollisionEnter2D() {
-		tip.bodyType = RigidbodyType2D.Static;
-		attached = true;
+		// TODO switch to colliders for targets and compare colliders
+		// compare for whether to attach or not
+		if (attached == true) {
+			Debug.Log("unboop");
+			attached = false;
+		}
+		else {
+			body.bodyType = RigidbodyType2D.Static;
+			attached = true;
+			Debug.Log("boop");
+		}
 	}
 	
 	internal void Release() {
-		tip.bodyType = RigidbodyType2D.Dynamic;
-		attached = false;
+		body.bodyType = RigidbodyType2D.Dynamic;
 	}
 	
-	List<Probe> Grow() {
-		probeLinks = new LinkedList<Probe>();
-		LinkedListNode<Probe> first = Spawn(0f);
-		probeLinks.AddFirst(first);
-		probeLinks.AddLast(Spawn(1f));
+	void Grow() {
+		ropeSegs = new LinkedList<RopeSeg>();
+		LinkedListNode<RopeSeg> first = Spawn(0f);
+		ropeSegs.AddFirst(first);
+		self.Size = size * shape.Evaluate(1f);
+		totalSize += self.Size;
+		ropeSegs.AddLast(self);
 		GrowRec(first, 0f, 1f);
 		Rigidbody2D link = this.anchor;
-		foreach (Probe probe in probeLinks) {
+		foreach (RopeSeg probe in ropeSegs) {
 			probe.Link = link;
 			link = probe.body;
 		}
-		return new List<Probe>(probeLinks);
 	}
 	
-	void GrowRec(LinkedListNode<Probe> prev, float prevTime, float nextTime) {
+	void GrowRec(LinkedListNode<RopeSeg> prev, float prevTime, float nextTime) {
 		float midTime = 0.5f * (prevTime + nextTime);
-		LinkedListNode<Probe> mid = Spawn(midTime);
-		probeLinks.AddAfter(prev, mid);
+		LinkedListNode<RopeSeg> mid = Spawn(midTime);
+		ropeSegs.AddAfter(prev, mid);
 		if (EvalGap(prevTime, midTime)) GrowRec(prev, prevTime, midTime);
 		if (EvalGap(midTime, nextTime)) GrowRec(mid, midTime, nextTime);
 	}
 	
-	LinkedListNode<Probe> Spawn(float time) {
-		Probe probe = Instantiate(probeFab, transform);
+	LinkedListNode<RopeSeg> Spawn(float time) {
+		RopeSeg probe = Instantiate(segFab, transform.parent);
 		probe.Size = size * shape.Evaluate(time);
 		totalSize += probe.Size;
-		return new LinkedListNode<Probe>(probe);
+		return new LinkedListNode<RopeSeg>(probe);
 	}
 	
 	bool EvalGap(float prev, float next) {
