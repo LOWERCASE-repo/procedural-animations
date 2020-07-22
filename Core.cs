@@ -9,7 +9,9 @@ class Core : MonoBehaviour {
 	[SerializeField]
 	Rigidbody2D body;
 	[SerializeField]
-	float speed, thrust, speedBonus;
+	CircleCollider2D circle;
+	[SerializeField]
+	float speed, thrust;
 	[SerializeField]
 	Rope[] ropeRefs;
 	HashSet<Rope> ropes;
@@ -26,15 +28,15 @@ class Core : MonoBehaviour {
 	
 	void FixedUpdate() {
 		Vector2 dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-		float bonusSpeed = 0f;
+		float speed = 0f;
 		foreach (Rope rope in grabs.Values) {
 			if (rope.body.bodyType == RigidbodyType2D.Static) {
-				bonusSpeed += speedBonus;
+				speed += this.speed;
 			}
 		}
-		Debug.Log(bonusSpeed);
-		Vector2 force = dir.normalized * thrust * (speed + bonusSpeed);
+		Vector2 force = dir.normalized * thrust * speed;
 		body.AddForce(force);
+		circle.offset = Vector2.ClampMagnitude(body.velocity / this.speed, 1f) * circle.radius * 0.5f;
 	}
 	
 	void OnTriggerEnter2D(Collider2D other) {

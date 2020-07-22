@@ -32,7 +32,8 @@ class Rope : MonoBehaviour {
 	
 	void FixedUpdate() {
 		Vector2 dir = target.position - body.position;
-		Vector2 force = dir.normalized * thrust * speed;
+		float brake = Mathf.Clamp(dir.magnitude * 2f, 0f, 1f);
+		Vector2 force = dir.normalized * thrust * speed * brake;
 		body.AddForce(force);
 	}
 	

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2920080156147634946}
   - component: {fileID: 3159017092324513211}
   - component: {fileID: 2920080156147634945}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: RopeSeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
