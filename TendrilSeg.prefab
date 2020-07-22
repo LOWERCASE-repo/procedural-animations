@@ -104,7 +104,7 @@ DistanceJoint2D:
   m_ConnectedAnchor: {x: 0, y: 0}
   m_AutoConfigureDistance: 0
   m_Distance: 1
-  m_MaxDistanceOnly: 1
+  m_MaxDistanceOnly: 0
 --- !u!212 &2920080156147634945
 SpriteRenderer:
   m_ObjectHideFlags: 0

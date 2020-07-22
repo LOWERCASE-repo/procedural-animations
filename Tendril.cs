@@ -7,6 +7,8 @@ class Tendril : MonoBehaviour {
 	
 	[SerializeField]
 	Camera cam;
+	internal Vector2 target;
+	
 	[SerializeField]
 	float speed, thrust;
 	[SerializeField]
@@ -17,45 +19,32 @@ class Tendril : MonoBehaviour {
 	Probe probeFab;
 	[SerializeField]
 	Rigidbody2D anchor;
-	Vector2 prevPos;
+	Rigidbody2D tip;
 	LinkedList<Probe> probeLinks;
 	float totalSize = 0f;
 	
 	void Start() {
 		Grow();
 		int probeCount = probeLinks.Count;
-		
-		float mass = 1f / (float)(probeCount + 2);
-		float drag = thrust * mass;
-		// Rigidbody2D link = anchor;
-		// for (int i = 0; i < probeCount; i++) {
-		// 	Probe probe = Instantiate(probeFab, transform);
-		// 	probe.Size = size;
-		// 	probe.Link = link;
-		// 	link = probe.body;
-		// 	probe.body.mass = mass;
-		// 	probe.body.gravityScale = 1f;
-		// 	probe.body.drag = drag;
-		// 	probes.Add(probe);
-		// }
-		// probe.Size = size;
-		// probe.Link = link;
-		// probes.Add(probe);
+		Debug.Log(totalSize);
+		foreach (Probe probe in probeLinks) {
+			probe.body.mass = 4f * probe.Size / totalSize;
+			probe.body.drag = 2f * thrust * probe.body.mass;
+		}
+		tip = probeLinks.Last.Value.body;
 	}
 	
 	void FixedUpdate() {
-		// Vector2 dir = cam.ScreenToWorldPoint(Input.mousePosition) - probe.transform.position;
-		// MoveDir(dir);
+		target = cam.ScreenToWorldPoint(Input.mousePosition);
+		Vector2 dir = target - tip.position;
+		Vector2 force = dir.normalized * thrust * speed;
+		tip.AddForce(force);
+		
 		// if (Input.GetKey(KeyCode.Mouse0)) {
-		// 	probe.body.bodyType = RigidbodyType2D.Static;
+		// 	tip.bodyType = RigidbodyType2D.Static;
 		// } else {
-		// 	probe.body.bodyType = RigidbodyType2D.Dynamic;
+		// 	tip.bodyType = RigidbodyType2D.Dynamic;
 		// }
-	}
-	
-	void MoveDir(Vector2 dir) {
-		// Vector2 force = dir.normalized * thrust * speed;
-		// probe.body.AddForce(force);
 	}
 	
 	List<Probe> Grow() {
