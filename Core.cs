@@ -9,7 +9,7 @@ class Core : MonoBehaviour {
 	[SerializeField]
 	Rigidbody2D body;
 	[SerializeField]
-	float speed, thrust;
+	float speed, thrust, speedBonus;
 	[SerializeField]
 	Tendril[] tendrilRefs;
 	HashSet<Tendril> tendrils;
@@ -25,7 +25,11 @@ class Core : MonoBehaviour {
 	
 	void FixedUpdate() {
 		Vector2 dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-		Vector2 force = dir.normalized * thrust * speed;
+		float bonusSpeed = 0f;
+		foreach (Tendril tendril in tendrils) {
+			if (tendril.attached) bonusSpeed += speedBonus;
+		}
+		Vector2 force = dir.normalized * thrust * (speed + speedBonus);
 		body.AddForce(force);
 		Debug.Log(targets.Count + " " + tendrils.Count + " " + grabs.Count);
 	}
@@ -40,7 +44,9 @@ class Core : MonoBehaviour {
 		if (targets.Contains(target)) {
 			targets.Remove(target);
 		} else {
-			tendrils.Add(grabs[target]);
+			Tendril tendril = grabs[target];
+			tendril.Release();
+			tendrils.Add(tendril);
 			grabs.Remove(target);
 			AssignGrabs();
 		}

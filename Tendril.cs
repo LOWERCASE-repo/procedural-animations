@@ -8,6 +8,7 @@ class Tendril : MonoBehaviour {
 	[SerializeField]
 	Camera cam;
 	internal Vector2 target = Vector2.zero;
+	internal bool attached = false;
 	
 	[SerializeField]
 	float speed, thrust;
@@ -39,12 +40,16 @@ class Tendril : MonoBehaviour {
 		Vector2 dir = target - tip.position;
 		Vector2 force = dir.normalized * thrust * speed;
 		tip.AddForce(force);
-		
-		// if (Input.GetKey(KeyCode.Mouse0)) {
-		// 	tip.bodyType = RigidbodyType2D.Static;
-		// } else {
-		// 	tip.bodyType = RigidbodyType2D.Dynamic;
-		// }
+	}
+	
+	void OnCollisionEnter2D() {
+		tip.bodyType = RigidbodyType2D.Static;
+		attached = true;
+	}
+	
+	internal void Release() {
+		tip.bodyType = RigidbodyType2D.Dynamic;
+		attached = false;
 	}
 	
 	List<Probe> Grow() {
