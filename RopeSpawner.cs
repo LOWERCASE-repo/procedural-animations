@@ -1,5 +1,4 @@
 #pragma warning disable 0649
-
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,13 +14,13 @@ class RopeSpawner : MonoBehaviour {
 	[SerializeField]
 	RopeSeg segFab;
 	[SerializeField]
-	Rope probeFab;
+	Probe probeFab;
 	[SerializeField]
 	Rigidbody2D anchor;
 	[SerializeField]
 	Core core;
 	
-	Rope probe;
+	Probe probe;
 	LinkedList<RopeSeg> segs;
 	float totalSize;
 	
@@ -33,7 +32,7 @@ class RopeSpawner : MonoBehaviour {
 				seg.body.mass = 4f * seg.Size / totalSize;
 				seg.body.drag = 40f * seg.body.mass;
 			}
-			probe.Init(segs, totalSize);
+			probe.Init(segs, totalSize, anchor);
 			core.AddRope(probe);
 		}
 		Destroy(this);

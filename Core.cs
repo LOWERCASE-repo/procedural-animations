@@ -1,5 +1,4 @@
 #pragma warning disable 0649
-
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +14,10 @@ class Core : MonoBehaviour {
 	CircleCollider2D circle;
 	[SerializeField]
 	float speed, thrust;
-	HashSet<Rope> ropes = new HashSet<Rope>();
-	internal void AddRope(Rope rope) { ropes.Add(rope); }
+	HashSet<Probe> ropes = new HashSet<Probe>();
+	internal void AddRope(Probe rope) { ropes.Add(rope); }
 	HashSet<Rigidbody2D> targets = new HashSet<Rigidbody2D>();
-	Dictionary<Rigidbody2D, Rope> grabs = new Dictionary<Rigidbody2D, Rope>();
+	Dictionary<Rigidbody2D, Probe> grabs = new Dictionary<Rigidbody2D, Probe>();
 	int connections;
 	
 	[SerializeField]
@@ -49,7 +48,7 @@ class Core : MonoBehaviour {
 			dir = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition) - body.position;
 		}
 		float speed = 0f;
-		foreach (Rope rope in grabs.Values) {
+		foreach (Probe rope in grabs.Values) {
 			if (rope.body.bodyType == RigidbodyType2D.Static) {
 				speed += this.speed;
 			}
@@ -72,7 +71,7 @@ class Core : MonoBehaviour {
 		if (targets.Contains(target)) {
 			targets.Remove(target);
 		} else {
-			Rope rope = grabs[target];
+			Probe rope = grabs[target];
 			rope.Release();
 			ropes.Add(rope);
 			grabs.Remove(target);
@@ -82,14 +81,14 @@ class Core : MonoBehaviour {
 	
 	void AssignGrabs() {
 		while (ropes.Count > 0 && targets.Count > 0) {
-			Rope rope = ropes.ElementAt(0);
+			Probe rope = ropes.ElementAt(0);
 			Rigidbody2D target = targets.ElementAt(0);
 			rope.target = target;
 			grabs.Add(target, rope);
 			ropes.Remove(rope);
 			targets.Remove(target);
 		}
-		foreach (Rope rope in ropes) {
+		foreach (Probe rope in ropes) {
 			rope.target = body;
 		}
 	}
