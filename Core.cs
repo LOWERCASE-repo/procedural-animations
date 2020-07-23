@@ -15,9 +15,8 @@ class Core : MonoBehaviour {
 	CircleCollider2D circle;
 	[SerializeField]
 	float speed, thrust;
-	[SerializeField]
-	Rope[] ropeRefs;
-	HashSet<Rope> ropes;
+	HashSet<Rope> ropes = new HashSet<Rope>();
+	internal void AddRope(Rope rope) { ropes.Add(rope); }
 	HashSet<Rigidbody2D> targets = new HashSet<Rigidbody2D>();
 	Dictionary<Rigidbody2D, Rope> grabs = new Dictionary<Rigidbody2D, Rope>();
 	int connections;
@@ -41,8 +40,6 @@ class Core : MonoBehaviour {
 	
 	void Start() {
 		body.drag = thrust;
-		ropes = new HashSet<Rope>(ropeRefs);
-		ropeRefs = null;
 		AssignGrabs();
 	}
 	
