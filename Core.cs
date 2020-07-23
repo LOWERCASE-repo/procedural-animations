@@ -7,6 +7,9 @@ using System.Linq;
 class Core : MonoBehaviour {
 	
 	[SerializeField]
+	Camera cam;
+	
+	[SerializeField]
 	Rigidbody2D body;
 	[SerializeField]
 	CircleCollider2D circle;
@@ -19,6 +22,23 @@ class Core : MonoBehaviour {
 	Dictionary<Rigidbody2D, Rope> grabs = new Dictionary<Rigidbody2D, Rope>();
 	int connections;
 	
+	[SerializeField]
+	Transform face;
+	[SerializeField]
+	SpriteRenderer leftEye;
+	[SerializeField]
+	SpriteRenderer rightEye;
+	Vector2 facePos { set => face.transform.localPosition = value; }
+	float faceAlpha {
+		set {
+			Color color = leftEye.color;
+			color.a = value;
+			leftEye.color = color;
+			rightEye.color = color;
+		}
+	}
+	
+	
 	void Start() {
 		body.drag = thrust;
 		ropes = new HashSet<Rope>(ropeRefs);
@@ -27,7 +47,10 @@ class Core : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		Vector2 dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+		Vector2 dir = Vector2.zero;
+		if (Input.GetKey(KeyCode.Mouse0)) {
+			dir = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition) - body.position;
+		}
 		float speed = 0f;
 		foreach (Rope rope in grabs.Values) {
 			if (rope.body.bodyType == RigidbodyType2D.Static) {
@@ -36,7 +59,10 @@ class Core : MonoBehaviour {
 		}
 		Vector2 force = dir.normalized * thrust * speed;
 		body.AddForce(force);
-		circle.offset = Vector2.ClampMagnitude(body.velocity / this.speed, 1f) * circle.radius * 0.5f;
+		Vector2 intent = Vector2.ClampMagnitude(body.velocity / this.speed * 0.3f, 1f);
+		circle.offset = intent * circle.radius * 0.5f;
+		facePos = new Vector2(intent.x * 0.8f, intent.y * 0.4f);
+		faceAlpha = intent.magnitude * 2f;
 	}
 	
 	void OnTriggerEnter2D(Collider2D other) {
