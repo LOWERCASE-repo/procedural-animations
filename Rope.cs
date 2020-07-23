@@ -24,6 +24,7 @@ class Rope : MonoBehaviour {
 	[SerializeField]
 	CircleCollider2D circle;
 	
+	AnimationCurve gripCurve;
 	LinkedList<RopeSeg> segs;
 	float totalSize = 0f;
 	
@@ -65,8 +66,6 @@ class Rope : MonoBehaviour {
 		seg.Value.color = Color.black;
 		seg.Value.order = 0;
 	}
-	
-	// TODO shove this into a RopeSpawner.cs?
 	
 	void Grow() {
 		segs = new LinkedList<RopeSeg>();
