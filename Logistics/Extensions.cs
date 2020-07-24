@@ -2,13 +2,17 @@ using UnityEngine;
 
 internal static class Extensions {
 	
-	internal static Quaternion Rot(this float angle) {
+	internal static Quaternion Rotation(this float angle) {
 		return Quaternion.AngleAxis(angle, Vector3.forward);
 	}
 	
 	internal static Quaternion Rotate(this Quaternion rot, float rotation) {
 		float angle = rot.eulerAngles.z;
 		return Quaternion.Euler(0f, 0f, angle - rotation);
+	}
+	
+	internal static float Angle(this Vector2 dir) {
+		return Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
 	}
 	
 	// Quaternion.LookRotation(Vector3.forward, dir);
