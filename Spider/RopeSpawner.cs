@@ -27,11 +27,6 @@ class RopeSpawner : MonoBehaviour {
 	void Start() {
 		for (int i = 0; i < ropeCount; i++) {
 			Grow();
-			int segCount = segs.Count;
-			foreach (RopeSeg seg in segs) {
-				seg.body.mass = 4f * seg.Size / totalSize;
-				seg.body.drag = 40f * seg.body.mass;
-			}
 			probe.Init(segs, totalSize, anchor);
 			core.AddRope(probe);
 		}
@@ -43,7 +38,7 @@ class RopeSpawner : MonoBehaviour {
 		segs = new LinkedList<RopeSeg>();
 		LinkedListNode<RopeSeg> first = Spawn(0f);
 		segs.AddFirst(first);
-		probe = Instantiate(probeFab);
+		probe = Instantiate(probeFab, transform);
 		probe.self.Size = size * shape.Evaluate(1f);
 		totalSize += probe.self.Size;
 		segs.AddLast(probe.self);

@@ -13,7 +13,7 @@ class Core : MonoBehaviour {
 	[SerializeField]
 	CircleCollider2D circle;
 	[SerializeField]
-	float speed, thrust;
+	float speed;
 	HashSet<Probe> ropes = new HashSet<Probe>();
 	internal void AddRope(Probe rope) { ropes.Add(rope); }
 	HashSet<Rigidbody2D> targets = new HashSet<Rigidbody2D>();
@@ -36,29 +36,29 @@ class Core : MonoBehaviour {
 		}
 	}
 	
-	
 	void Start() {
-		body.drag = thrust;
 		AssignGrabs();
 	}
 	
 	void FixedUpdate() {
-		Vector2 dir = Vector2.zero;
-		if (Input.GetKey(KeyCode.Mouse0)) {
-			dir = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition) - body.position;
-		}
-		float speed = 0f;
+		float speed = this.speed;
 		foreach (Probe rope in grabs.Values) {
 			if (rope.body.bodyType == RigidbodyType2D.Static) {
 				speed += this.speed;
 			}
 		}
-		Vector2 force = dir.normalized * thrust * speed;
+		body.drag = speed / body.mass;
+		Vector2 dir = Vector2.zero;
+		if (Input.GetKey(KeyCode.Mouse0)) {
+			dir = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition) - body.position;
+		}
+		dir = dir.normalized;
+		Vector2 force = dir * speed * speed;
 		body.AddForce(force);
-		Vector2 intent = Vector2.ClampMagnitude(body.velocity / this.speed * 0.3f, 1f);
-		circle.offset = intent * circle.radius * 0.5f;
-		facePos = new Vector2(intent.x * 0.8f, intent.y * 0.4f);
-		faceAlpha = intent.magnitude * 2f;
+		Vector2 intent = Vector2.ClampMagnitude(body.velocity / this.speed / this.speed, 1f);
+		circle.offset = intent * circle.radius;
+		facePos = new Vector2(intent.x * 0.7f, intent.y * 0.3f);
+		faceAlpha = body.velocity.sqrMagnitude;
 	}
 	
 	void OnTriggerEnter2D(Collider2D other) {

@@ -11,7 +11,7 @@ class Probe : MonoBehaviour {
 	[SerializeField]
 	internal RopeSeg self;
 	[SerializeField]
-	float speed, thrust;
+	float speed;
 	[SerializeField]
 	Gradient gradient;
 	[SerializeField]
@@ -31,26 +31,31 @@ class Probe : MonoBehaviour {
 		this.segs = segs;
 		this.totalSize = totalSize;
 		this.target = target;
+		body.drag = speed / body.mass;
+		trail.startWidth = self.Size;
+		trail.time = body.mass / self.Size / speed;
 	}
 	
 	void FixedUpdate() {
 		Vector2 dir = target.position - body.position;
 		float brake = Mathf.Clamp(dir.magnitude * 2f, 0f, 1f);
-		Vector2 force = dir.normalized * thrust * speed * brake;
+		Vector2 force = dir.normalized * speed * speed * brake;
 		body.AddForce(force);
 		float size = self.Size;
 		if (body.bodyType == RigidbodyType2D.Static) Scale = size * 1.2f;
 		else Scale = size;
 	}
 	
-	void OnTriggerEnter2D(Collider2D collider) {
-		Rigidbody2D target = collider.attachedRigidbody;
+	// not called on static, so performance is fine
+	void OnTriggerStay2D(Collider2D other) {
+		Rigidbody2D target = other.attachedRigidbody;
 		if (target == this.target) {
-			transform.position = collider.ClosestPoint(body.position);
-			body.bodyType = RigidbodyType2D.Static;
+			transform.position = other.ClosestPoint(body.position);
 			StartCoroutine(Flash(segs.Last, 0f));
-		}
+			body.bodyType = RigidbodyType2D.Static;
+		} else body.bodyType = RigidbodyType2D.Dynamic;
 	}
+	
 	internal void Release() { body.bodyType = RigidbodyType2D.Dynamic; }
 	
 	IEnumerator Flash(LinkedListNode<RopeSeg> seg, float time) {
