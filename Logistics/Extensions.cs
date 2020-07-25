@@ -1,27 +1,21 @@
 using UnityEngine;
 
-internal static class Extensions {
+public static class Extensions {
 	
-	internal static Quaternion Rotation(this float angle) {
+	public static Quaternion Rotation(this float angle) {
 		return Quaternion.AngleAxis(angle, Vector3.forward);
 	}
 	
-	internal static Quaternion Rotate(this Quaternion rot, float rotation) {
+	public static Quaternion Rotate(this Quaternion rot, float rotation) {
 		float angle = rot.eulerAngles.z;
 		return Quaternion.Euler(0f, 0f, angle - rotation);
 	}
 	
-	internal static float Angle(this Vector2 dir) {
+	public static float Angle(this Vector2 dir) {
 		return Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
 	}
 	
-	// Quaternion.LookRotation(Vector3.forward, dir);
-	/*
-	// Quaternion target = (-45f).Rot() * Quaternion.LookRotation(Vector3.forward, dir);
-	float d = (dir.x - transform.up.x) * (-transform.up.y) - (dir.y - transform.up.y) * (-transform.up.x);
-	*/
-	
-	internal static Vector2 Predict(this Vector2 relPos, Vector2 relVel, float speed) {
+	public static Vector2 Predict(this Vector2 relPos, Vector2 relVel, float speed) {
 		float a = speed * speed - relVel.sqrMagnitude;
 		float b = Vector2.Dot(relPos, relVel);
 		float det = b * b + a * relPos.sqrMagnitude;
