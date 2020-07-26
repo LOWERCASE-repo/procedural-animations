@@ -5,7 +5,6 @@ using System.Linq;
 
 class Core2 : Mover {
 	
-	[SerializeField]
 	protected float bonusSpeed;
 	[SerializeField]
 	protected CircleCollider2D vision;
@@ -14,14 +13,18 @@ class Core2 : Mover {
 	HashSet<Probe2> probes = new HashSet<Probe2>();
 	internal void AddProbe(Probe2 probe) { probes.Add(probe); }
 	
-	protected override void FixedUpdate() {
+	protected override void Awake() {
+		base.Awake();
+		bonusSpeed = speed;
+	}
+	
+	protected virtual void FixedUpdate() {
 		this.speed = bonusSpeed;
 		foreach (Probe2 probe in links.Values) {
 			if (probe.body.bodyType == RigidbodyType2D.Static) {
 				this.speed += bonusSpeed;
 			}
 		}
-		base.FixedUpdate();
 	}
 	
 	void OnTriggerEnter2D(Collider2D other) {

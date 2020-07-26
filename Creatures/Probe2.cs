@@ -10,8 +10,12 @@ class Probe2 : Mover {
 	internal RopeSeg self;
 	internal Rigidbody2D target;
 	
-	protected override void FixedUpdate() {
-		base.FixedUpdate();
+	protected override void Awake() {
+		base.Awake();
+		self = GetComponent<RopeSeg>();
+	}
+	
+	protected void FixedUpdate() {
 		Move(target.position - body.position);
 	}
 	

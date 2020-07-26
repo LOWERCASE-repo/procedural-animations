@@ -636,7 +636,7 @@ GameObject:
   m_Component:
   - component: {fileID: 610555835}
   m_Layer: 0
-  m_Name: Eyes
+  m_Name: Face
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2617,13 +2617,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2104303197}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5828970a9e3f7d4488a936e064a035e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 64cfa60afce57fb42826eadb173c629f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420031}
-  body: {fileID: 2104303200}
-  circle: {fileID: 2104303202}
   speed: 3
+  vision: {fileID: 2104303202}
   face: {fileID: 610555835}
   leftEye: {fileID: 109555779}
   rightEye: {fileID: 451124110}
@@ -2858,10 +2856,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2118234344}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12614e79dfe49a145a0d40f09d665d1c, type: 3}
+  m_Script: {fileID: 11500000, guid: a91d2cef965d7174f8b3eed8069b72d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ropeCount: 5
+  probeCount: 5
   length: 9
   size: 1
   shape:
@@ -2898,7 +2896,5 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   segFab: {fileID: 6309109467759654889, guid: 559cfbab45eedf743b890da3e3495581, type: 3}
-  probeFab: {fileID: 1566214358733865843, guid: 35bbf1ef0b7ca7b43bd2de2def9c298f,
+  probeFab: {fileID: 6659630796554917810, guid: f5a8a66ff61bd804a9493a1c3856b6af,
     type: 3}
-  anchor: {fileID: 2118234345}
-  core: {fileID: 2104303198}

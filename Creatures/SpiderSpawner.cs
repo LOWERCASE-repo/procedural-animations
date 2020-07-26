@@ -15,13 +15,16 @@ class SpiderSpawner : MonoBehaviour {
 	RopeSeg segFab;
 	[SerializeField]
 	SpiderProbe probeFab;
-	[SerializeField]
 	Rigidbody2D anchor;
-	[SerializeField]
 	SpiderCore core;
 	
 	SpiderProbe probe;
 	LinkedList<RopeSeg> segs;
+	
+	void Awake() {
+		anchor = GetComponent<Rigidbody2D>();
+		core = transform.parent.GetComponent<SpiderCore>();
+	}
 	
 	void Start() {
 		for (int i = 0; i < probeCount; i++) {

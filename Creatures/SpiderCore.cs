@@ -22,7 +22,8 @@ class SpiderCore : Core2 {
 		}
 	}
 	
-	void Awake() {
+	protected override void Awake() {
+		base.Awake();
 		cam = Camera.main;
 	}
 	
@@ -32,10 +33,8 @@ class SpiderCore : Core2 {
 		if (Input.GetKey(KeyCode.Mouse0)) {
 			dir = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition) - body.position;
 		}
-		dir = dir.normalized;
-		Vector2 force = dir * speed * speed;
-		body.AddForce(force);
-		Vector2 intent = Vector2.ClampMagnitude(body.velocity / this.speed / this.speed, 1f);
+		Move(dir);
+		Vector2 intent = Vector2.ClampMagnitude(body.velocity / this.bonusSpeed / this.bonusSpeed, 1f);
 		vision.offset = intent * vision.radius;
 		facePos = new Vector2(intent.x * 0.7f, intent.y * 0.3f);
 		faceAlpha = body.velocity.sqrMagnitude;
