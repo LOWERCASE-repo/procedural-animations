@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Gradient), typeof(TrailRenderer))]
-class SpiderProbe : Probe2 {
+class SpiderProbe : Probe {
 	
 	[SerializeField]
 	Gradient gradient;

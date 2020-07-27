@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-class SpiderCore : Core2 {
+class SpiderCore : Core {
 	
 	Camera cam;
 	[SerializeField]

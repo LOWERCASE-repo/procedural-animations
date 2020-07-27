@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-class Probe2 : Mover {
+class Probe : Mover {
 	
 	[SerializeField]
 	CircleCollider2D circle;
@@ -13,6 +13,7 @@ class Probe2 : Mover {
 	protected override void Awake() {
 		base.Awake();
 		self = GetComponent<RopeSeg>();
+		target = body;
 	}
 	
 	protected void FixedUpdate() {
