@@ -26,5 +26,6 @@ class WalkerCore : Core {
 		dir.y = 0f;
 		Move(dir);
 		Vector2 intent = Vector2.ClampMagnitude(body.velocity / this.bonusSpeed / this.bonusSpeed, 1f);
+		vision.offset = intent * vision.radius;
 	}
 }
