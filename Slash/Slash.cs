@@ -9,6 +9,9 @@ class Slash : MonoBehaviour {
 	[SerializeField]
 	float time, startAng, endAng;
 	Transform blade;
+	Vector2 endPosition;
+	float endPivot;
+	
 	
 	void Start() {
 		blade = transform.GetChild(0);
