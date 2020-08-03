@@ -12,7 +12,6 @@ class Slash : MonoBehaviour {
 	Vector2 endPosition;
 	float endPivot;
 	
-	
 	void Start() {
 		blade = transform.GetChild(0);
 		StartCoroutine(Activate());
