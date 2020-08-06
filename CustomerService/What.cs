@@ -1,4 +1,4 @@
-#pragma warning disable 0649
+#pragma warning disable 649
 using UnityEngine;
 
 class What : MonoBehaviour {
